@@ -3,6 +3,9 @@ RZD case for Nuclear IT hack fall spring 2024
 
 Problem: recognizing smokers in inaproppriate for smoking places
 
+#presentation
+[ https://docs.google.com/presentation/d/1skxsDQddF9XH3TV9PmvUpdbo-fAE8pOuOEAPo41SxAU/edit?usp=sharing ]
+
 ![smokers](assets/smoker1.jpg)
 
 #Usage
