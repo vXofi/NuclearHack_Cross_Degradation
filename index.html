@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smoker Detection</title>
+</head>
+<style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: large;
+        box-shadow: none!important;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        margin-top: 25%;
+        margin-bottom: 25%;
+        text-align: center;
+    }
+</style>
+<body>
+    <h1>Обнаружение курильщиков</h1>
+    <p>YOLA v9, нейросеть обнаруживает курильщика по сигарете на фотографии, скорость работы ~10мс</h2>
+    <form id="uploadForm">
+        <input type="file" id="imageInput" name="file" accept="image/png, image/jpeg">
+        <button type="button" onclick="uploadImage()">Загрузить изображение</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        async function uploadImage() {
+            const formData = new FormData();
+            const imageInput = document.getElementById('imageInput');
+            formData.append("file", imageInput.files[0]);
+
+            try {
+                const response = await fetch('http://localhost:8000/detect/', {
+                    method: 'POST',
+                    body: formData,
+                });
+                const result = await response.json();
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = result.smoker_detected ? `На изображении есть курильщик с вероятностью ${ (result.confidence)}, ${ (result.crop)}` : `Курильщик не обнаружен, ${(result.crop)}` ;
+            } catch (error) {
+                console.error('Ошибка:', error);
+            }
+        }
+    </script>
+</body>
+</html>
