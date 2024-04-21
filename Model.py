@@ -1,11 +1,17 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
+from fastapi import FastAPI, Request
+from fastapi.templating import Jinja2Templates
 import numpy as np
 import cv2
 from ultralytics import YOLO
-
 app = FastAPI()
-model = YOLO("/Users/veceloe/Downloads/NuclearHack/augmented.pt")
+model = YOLO("/Users/veceloe/GitHub/NuclearHack_Cross_Degradation/yolov8n.pt")
+templates = Jinja2Templates(directory="./")
+
+@app.get("/")
+async def index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 @app.post("/detect/")
 async def detect(file: UploadFile = File(...)):
