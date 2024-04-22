@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Обнаружение курильщиков</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1, h3 {
+            color: #333;
+        }
+        form {
+            margin-top: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        input[type="file"], button {
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .images {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .image-container {
+            width: 45%;
+            text-align: center;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        #result {
+            font-size: 18px;
+            color: #555;
+            font-weight: bold;
+            margin-top: 15px;
+            background-color: #ECF0F1;
+            border-radius: 8px;
+            padding: 10px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: 80%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Обнаружение курильщиков</h1>
+    <form id="uploadForm">
+        <input type="file" id="imageInput" name="file" accept="image/png, image/jpeg">
+        <button type="button" onclick="uploadImage()">Загрузить изображение</button>
+    </form>
+    <div id="result"></div>
+    <div class="images">
+        <div class="image-container">
+            <h3>Входное изображение</h3>
+            <img id="inputImage" src="" alt="Входное изображение">
+        </div>
+        <div class="image-container">
+            <h3>Результат модели</h3>
+            <img id="outputImage" src="" alt="Результат модели">
+        </div>
+    </div>
+    <script>
+        async function uploadImage() {
+            const formData = new FormData(document.getElementById('uploadForm'));
+            const response = await fetch('http://localhost:8000/detect/', {
+                method: 'POST',
+                body: formData,
+            });
+            const result = await response.json();
+            document.getElementById('inputImage').src = result.input_image;
+            document.getElementById('outputImage').src = result.output_image;
+            const resultText = result.smoker_detected 
+                ? `Обнаружение курильщика: Да, Уверенность: ${result.confidence.toFixed(2)}%` 
+                : 'Курильщик не обнаружен';
+            document.getElementById('result').innerHTML = resultText;
+        }
+    </script>
+</body>
+</html>
